@@ -28,7 +28,7 @@ export default function SearchPage() {
 
   return (
     <main>
-      <h1>Search Books</h1>
+      <h1>Search Books1</h1>
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <ul>
