@@ -1,17 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-const colors = {
-  background: "#F5EFE6",
-  card: "#FFFFFF",
-  accent: "#7BAE7F",
-  accentText: "#fff",
-  border: "#6B4F2B",
-  heading: "#6B4F2B",
-  text: "#2D2D2D",
-  highlight: "#F2C572",
-};
+import colors from "../../../constants/colors";
+import { register } from "../../../services/authService";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -25,18 +16,7 @@ export default function RegisterPage() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data|| "Kunde inte skapa konto.");
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
+      const data = await register(username, password);
       if (typeof data.token !== "string") {
         setError("Kunde inte skapa konto.");
         setLoading(false);
@@ -44,8 +24,8 @@ export default function RegisterPage() {
       }
       localStorage.setItem("token", data.token);
       router.push("/");
-    } catch (err) {
-      setError("Nätverksfel. Försök igen.");
+    } catch (err: any) {
+      setError(err.message || "Nätverksfel. Försök igen.");
     } finally {
       setLoading(false);
     }

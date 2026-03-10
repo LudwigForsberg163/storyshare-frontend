@@ -1,19 +1,10 @@
 "use client";
 import AuthGuard from "../../../components/AuthGuard";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-const colors = {
-  background: "#F5EFE6",
-  card: "#FFFFFF",
-  accent: "#7BAE7F",
-  accentText: "#fff",
-  border: "#6B4F2B",
-  heading: "#6B4F2B",
-  text: "#2D2D2D",
-  highlight: "#F2C572",
-};
+import colors from "../../../constants/colors";
+import { getCurrentLoans } from "../../../services/loansService";
+import { returnBook } from "../../../services/booksService";
 
 export default function LoansPage() {
   const [activeLoans, setActiveLoans] = useState<any[]>([]);
@@ -29,15 +20,7 @@ export default function LoansPage() {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/loans/current`, {
-          headers: {
-            "Authorization": token ? `Bearer ${token}` : "",
-            "Accept": "application/json"
-          }
-        });
-        if (!res.ok) throw new Error("Kunde inte hämta lån.");
-        const data = await res.json();
+        const data = await getCurrentLoans();
         setActiveLoans(data.active || []);
         setInactiveLoans(data.inactive || []);
         setUsername(typeof data.username === 'string' ? data.username : null);
@@ -54,17 +37,8 @@ export default function LoansPage() {
     setReturning((r) => ({ ...r, [loanId]: true }));
     setSuccess((s) => ({ ...s, [loanId]: false }));
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/${bookId}/return`, {
-        method: "POST",
-        headers: {
-          "Authorization": token ? `Bearer ${token}` : "",
-          "Accept": "application/json"
-        }
-      });
-      if (!res.ok) throw new Error("Kunde inte lämna in bok.");
+      await returnBook(bookId);
       setSuccess((s) => ({ ...s, [loanId]: true }));
-      // Move the returned loan from activeLoans to inactiveLoans
       setActiveLoans((prevActive) => prevActive.filter(l => l.id !== loanId));
       setInactiveLoans((prevInactive) => {
         const returnedLoan = activeLoans.find(l => l.id === loanId);
@@ -78,7 +52,7 @@ export default function LoansPage() {
           ...prevInactive,
         ];
       });
-    } catch (err) {
+    } catch {
       // Optionally show error per loan
     } finally {
       setReturning((r) => ({ ...r, [loanId]: false }));

@@ -2,17 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import AuthGuard from "../../../../components/AuthGuard";
-
-const colors = {
-  background: "#F5EFE6",
-  card: "#FFFFFF",
-  accent: "#7BAE7F",
-  accentText: "#fff",
-  border: "#6B4F2B",
-  heading: "#6B4F2B",
-  text: "#2D2D2D",
-  highlight: "#F2C572",
-};
+import colors from "../../../../constants/colors";
+import { getBook, loanBook, returnBook } from "../../../../services/booksService";
 
 export default function BookDetailPage() {
   const { id } = useParams();
@@ -29,15 +20,7 @@ export default function BookDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/${id}`, {
-          headers: {
-            "Authorization": token ? `Bearer ${token}` : "",
-            "Accept": "application/json"
-          }
-        });
-        if (!res.ok) throw new Error("Kunde inte hämta bok.");
-        const data = await res.json();
+        const data = await getBook(id as string);
         setBook(data);
       } catch (err: any) {
         setError(err.message || "Nätverksfel. Försök igen.");
@@ -54,20 +37,10 @@ export default function BookDetailPage() {
     setBorrowSuccess(false);
     const isReturning = book?.loanedByCurrentUser;
     try {
-      const token = localStorage.getItem("token");
-      const endpoint = isReturning
-        ? `${process.env.NEXT_PUBLIC_API_URL}/books/${id}/return`
-        : `${process.env.NEXT_PUBLIC_API_URL}/books/${id}/loan`;
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Authorization": token ? `Bearer ${token}` : "",
-          "Accept": "application/json"
-        }
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || (isReturning ? "Kunde inte lämna in bok." : "Kunde inte låna bok."));
+      if (isReturning) {
+        await returnBook(id as string);
+      } else {
+        await loanBook(id as string);
       }
       setBorrowSuccess(true);
       setBook((b: any) => ({

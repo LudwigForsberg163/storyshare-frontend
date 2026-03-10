@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "../../components/AuthGuard";
+import colors from "../../constants/colors";
+import { searchBooks } from "../../services/booksService";
 
 interface Book {
 	id: number;
@@ -20,17 +22,6 @@ interface Book {
 	availableCopies: number;
 }
 
-const colors = {
-	background: "#F5EFE6",
-	card: "#FFFFFF",
-	accent: "#7BAE7F",
-	accentText: "#fff",
-	border: "#6B4F2B",
-	heading: "#6B4F2B",
-	text: "#2D2D2D",
-	highlight: "#F2C572",
-};
-
 function SearchPage() {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -42,7 +33,6 @@ function SearchPage() {
 
 	async function handleSearch(e?: React.FormEvent) {
 		if (e) e.preventDefault();
-		// Update the URL with the search query
 		if (query) {
 			router.push(`?q=${encodeURIComponent(query)}`);
 		} else {
@@ -52,20 +42,7 @@ function SearchPage() {
 		setError(null);
 		setSearched(true);
 		try {
-			const token = localStorage.getItem("token");
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/search?search=${encodeURIComponent(query)}`,
-				{
-					headers: {
-						"Authorization": token ? `Bearer ${token}` : "",
-						"Accept": "application/json"
-					}
-				}
-			);
-			if (!res.ok) {
-				const data = await res.json().catch(() => ({}));
-				throw new Error(data.message || "Kunde inte hämta böcker.");
-			}
-			const data = await res.json();
+			const data = await searchBooks(query);
 			setBooks(data);
 		} catch (err: any) {
 			setError(err.message || "Nätverksfel. Försök igen.");
@@ -80,26 +57,12 @@ function SearchPage() {
 		const q = searchParams.get("q") || "";
 		setQuery(q);
 		if (q) {
-			// Only auto-search if q is present
 			(async () => {
 				setLoading(true);
 				setError(null);
 				setSearched(true);
 				try {
-					const token = localStorage.getItem("token");
-					const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/search?search=${encodeURIComponent(q)}`,
-						{
-							headers: {
-								"Authorization": token ? `Bearer ${token}` : "",
-								"Accept": "application/json"
-							}
-						}
-					);
-					if (!res.ok) {
-						const data = await res.json().catch(() => ({}));
-						throw new Error(data.message || "Kunde inte hämta böcker.");
-					}
-					const data = await res.json();
+					const data = await searchBooks(q);
 					setBooks(data);
 				} catch (err: any) {
 					setError(err.message || "Nätverksfel. Försök igen.");
@@ -109,7 +72,6 @@ function SearchPage() {
 				}
 			})();
 		} else {
-			// If no query, clear results and state
 			setBooks([]);
 			setError(null);
 			setSearched(false);

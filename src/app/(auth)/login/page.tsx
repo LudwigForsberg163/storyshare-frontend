@@ -1,18 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// Bibliotekets palette
-const colors = {
-  background: "#F5EFE6",
-  card: "#FFFFFF",
-  accent: "#7BAE7F",
-  accentText: "#fff",
-  border: "#6B4F2B",
-  heading: "#6B4F2B",
-  text: "#2D2D2D",
-  highlight: "#F2C572",
-};
+import colors from "../../../constants/colors";
+import { login, register } from "../../../services/authService";
 
 
 export default function LoginPage() {
@@ -28,22 +18,11 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data.message || "Fel användarnamn eller lösenord.");
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
+      const data = await login(username, password);
       localStorage.setItem("token", data.token);
       router.push("/");
-    } catch (err) {
-      setError("Nätverksfel. Försök igen.");
+    } catch (err: any) {
+      setError(err.message || "Fel användarnamn eller lösenord.");
     } finally {
       setLoading(false);
     }
@@ -53,23 +32,11 @@ export default function LoginPage() {
     setError(null);
     setRegistering(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data || "Kunde inte skapa konto.");
-        setRegistering(false);
-        return;
-      }
-      // Optionally, log in the user directly after registration
-      // Or show a success message and clear fields
-      // Here, we log in directly for convenience
-      await handleLogin({ preventDefault: () => {} } as React.FormEvent);
-    } catch (err) {
-      setError("Nätverksfel. Försök igen.");
+      const data = await register(username, password);
+      localStorage.setItem("token", data.token);
+      router.push("/");
+    } catch (err: any) {
+      setError(err.message || "Kunde inte skapa konto.");
     } finally {
       setRegistering(false);
     }
