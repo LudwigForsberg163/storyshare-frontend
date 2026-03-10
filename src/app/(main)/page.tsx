@@ -31,7 +31,7 @@ const colors = {
 	highlight: "#F2C572",
 };
 
-export default function SearchPage() {
+function SearchPage() {
 	const [books, setBooks] = useState<Book[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -204,5 +204,16 @@ export default function SearchPage() {
 				</div>
 			</main>
 		</AuthGuard>
+
+	);
+}
+
+import { Suspense } from "react";
+
+export default function SearchPageWrapper() {
+	return (
+		<Suspense fallback={<div>Laddar...</div>}>
+			<SearchPage />
+		</Suspense>
 	);
 }
