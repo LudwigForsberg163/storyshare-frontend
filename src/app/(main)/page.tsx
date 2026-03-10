@@ -119,16 +119,16 @@ function SearchPage() {
 
 	return (
 		<AuthGuard>
-			<main style={{ maxWidth: 600, margin: "0 auto", padding: 16, minHeight: '100vh' }}>
+			<main style={{ width: '100vw', margin: 0, padding: 16, minHeight: '100vh', boxSizing: 'border-box' }}>
 				<div style={{
 					width: '100%',
-					maxWidth: 420,
 					background: colors.card,
 					padding: 24,
 					borderRadius: 12,
 					boxShadow: '0 2px 12px rgba(107,79,43,0.07)',
-					margin: '0 auto 24px auto',
+					margin: '0 0 24px 0',
 					border: `1.5px solid ${colors.border}`,
+					boxSizing: 'border-box',
 				}}>
 					<h1 style={{
 						textAlign: 'center',
