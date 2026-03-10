@@ -42,7 +42,7 @@ body {
     flex-direction: row;
     height: 56px;
     border-top: none;
-    border-bottom: 1.5px solid #6B4F2B;
+    border-bottom: none;
     background: #fff;
   }
   .nav-link {
