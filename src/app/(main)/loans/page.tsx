@@ -18,6 +18,7 @@ const colors = {
 export default function LoansPage() {
   const [activeLoans, setActiveLoans] = useState<any[]>([]);
   const [inactiveLoans, setInactiveLoans] = useState<any[]>([]);
+  const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [returning, setReturning] = useState<{ [loanId: number]: boolean }>({});
@@ -39,6 +40,7 @@ export default function LoansPage() {
         const data = await res.json();
         setActiveLoans(data.active || []);
         setInactiveLoans(data.inactive || []);
+        setUsername(typeof data.username === 'string' ? data.username : null);
       } catch (err: any) {
         setError(err.message || "Nätverksfel. Försök igen.");
       } finally {
@@ -86,6 +88,11 @@ export default function LoansPage() {
   return (
     <AuthGuard>
       <main style={{ maxWidth: 700, margin: "0 auto", padding: 24, background: colors.background, minHeight: '100vh' }}>
+        {username && (
+          <div style={{ textAlign: 'center', color: colors.heading, fontSize: 16, marginBottom: 8 }}>
+            Inloggad som <span style={{ fontWeight: 600, color: colors.accent }}>{username}</span>
+          </div>
+        )}
         <h1 style={{ textAlign: 'center', color: colors.heading, marginBottom: 24 }}>Mina lån</h1>
         {loading ? (
           <p>Laddar...</p>
@@ -106,15 +113,10 @@ export default function LoansPage() {
                     {loan.bookTitle || 'Okänd bok'}
                   </Link>
                 </div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Lånad: {loan.loanedAt ? loan.loanedAt.slice(0, 10) : '-'}</div>
-                <div style={{ fontSize: 14, color: loan.availableCopies > 0 ? colors.accent : '#e05a5a', marginBottom: 4, fontWeight: 600 }}>
-                  {typeof loan.availableCopies === 'number' && typeof loan.totalCopies === 'number'
-                    ? `${loan.availableCopies}/${loan.totalCopies} exemplar tillgängliga`
-                    : 'Tillgänglighet okänd'}
-                </div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Förfaller: {loan.dueDate ? loan.dueDate.slice(0, 10) : '-'}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Lånetid: {loan.borrowedTime}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Tid kvar: {loan.timeRemaining}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Lånad: {loan.loanedAt ? loan.loanedAt.slice(0, 10) : '-'}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Förfaller: {loan.dueDate ? loan.dueDate.slice(0, 10) : '-'}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Lånetid: {loan.borrowedTime}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Tid kvar: {loan.timeRemaining}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
                   <button
                     onClick={() => handleReturn(loan.id, loan.bookId)}
@@ -150,11 +152,11 @@ export default function LoansPage() {
                     {loan.bookTitle || 'Okänd bok'}
                   </Link>
                 </div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Lånad: {loan.loanedAt ? loan.loanedAt.slice(0, 10) : '-'}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Förfaller: {loan.dueDate ? loan.dueDate.slice(0, 10) : '-'}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Inlämnad: {loan.returnedAt ? loan.returnedAt.slice(0, 10) : '-'}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Lånetid: {loan.borrowedTime}</div>
-                <div style={{ fontSize: 14, color: '#888', marginBottom: 4 }}>Tid kvar vid inlämning: {loan.daysLeftWhenReturned}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Lånad: {loan.loanedAt ? loan.loanedAt.slice(0, 10) : '-'}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Förfaller: {loan.dueDate ? loan.dueDate.slice(0, 10) : '-'}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Inlämnad: {loan.returnedAt ? loan.returnedAt.slice(0, 10) : '-'}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Lånetid: {loan.borrowedTime}</div>
+                <div style={{ fontSize: 14, color: '#5C5C5C', marginBottom: 4 }}>Tid kvar vid inlämning: {loan.daysLeftWhenReturned}</div>
               </div>
             ))}
           </div>

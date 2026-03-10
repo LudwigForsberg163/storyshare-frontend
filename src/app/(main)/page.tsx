@@ -134,7 +134,7 @@ export default function SearchPage() {
 						textAlign: 'center',
 						fontSize: 28,
 						fontWeight: 700,
-						marginBottom: 8,
+						marginTop: 0,
 						color: colors.heading,
 						letterSpacing: 1,
 					}}>Sök böcker</h1>
@@ -143,7 +143,7 @@ export default function SearchPage() {
 							type="text"
 							value={query}
 							onChange={e => setQuery(e.target.value)}
-							placeholder="Sök titel, författare, ISBN..."
+							placeholder="Sök titel..."
 							style={{ flex: 1, padding: 12, fontSize: 16, borderRadius: 6, border: `1.5px solid ${colors.border}`, color: colors.text, background: colors.card }}
 							disabled={loading}
 						/>
