@@ -21,21 +21,22 @@ export default function LogoutButton() {
     <button
       onClick={handleLogout}
       style={{
-        position: 'absolute',
-        top: 18,
-        right: 24,
-        background: '#7BAE7F',
-        color: '#fff',
+        background: 'transparent',
+        color: '#e05a5a',
         border: 'none',
         borderRadius: 6,
-        padding: '8px 18px',
+        padding: '4px 0',
         fontWeight: 600,
-        fontSize: 16,
+        fontSize: 15,
         cursor: 'pointer',
-        boxShadow: '0 1px 4px #7BAE7F33',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 2,
       }}
     >
-      Logga ut
+      <span style={{ fontSize: 22 }}>🚪</span>
+      <span>Logga ut</span>
     </button>
   );
 }
