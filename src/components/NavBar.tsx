@@ -74,7 +74,7 @@ export default function NavBar() {
       `}</style>
 
       {/* Left icon */}
-      <div style={{ maxWidth: 120, width: '100%' }}>
+      <div style={{ maxWidth: 120 }}>
         <Link
           href={navItems[0].href}
           className={"nav-link" + (pathname === navItems[0].href ? " active" : "")}
@@ -132,7 +132,7 @@ export default function NavBar() {
       </div>
 
       {/* Right icon (logout) */}
-      <div style={{ maxWidth: 120, width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+      <div style={{ maxWidth: 120, display: 'flex', justifyContent: 'flex-end' }}>
         <button
           onClick={handleLogout}
           className="nav-link"
