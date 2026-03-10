@@ -119,9 +119,10 @@ function SearchPage() {
 
 	return (
 		<AuthGuard>
-			<main style={{ width: '100vw', margin: 0, padding: 16, minHeight: '100vh', boxSizing: 'border-box' }}>
+			<main style={{ width: '100vw', margin: 0, padding: 16, minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 				<div style={{
 					width: '100%',
+					maxWidth: 320,
 					background: colors.card,
 					padding: 24,
 					borderRadius: 12,
@@ -138,18 +139,27 @@ function SearchPage() {
 						color: colors.heading,
 						letterSpacing: 1,
 					}}>Sök böcker</h1>
-					<form onSubmit={handleSearch} style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+					<form
+						onSubmit={handleSearch}
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							gap: 8,
+							marginBottom: 12,
+						}}
+					>
 						<input
 							type="text"
 							value={query}
 							onChange={e => setQuery(e.target.value)}
 							placeholder="Sök titel..."
-							style={{ flex: 1, padding: 12, fontSize: 16, borderRadius: 6, border: `1.5px solid ${colors.border}`, color: colors.text, background: colors.card }}
+							style={{ width: '100%', padding: 12, fontSize: 16, borderRadius: 6, border: `1.5px solid ${colors.border}`, color: colors.text, background: colors.card, boxSizing: 'border-box' }}
 							disabled={loading}
 						/>
 						<button
 							type="submit"
 							style={{
+								width: '100%',
 								padding: "12px 18px",
 								borderRadius: 6,
 								background: colors.accent,
@@ -158,7 +168,6 @@ function SearchPage() {
 								fontWeight: 600,
 								fontSize: 16,
 								cursor: loading ? "not-allowed" : "pointer",
-								width: 100,
 								transition: 'background 0.2s',
 							}}
 							disabled={loading}
@@ -171,7 +180,7 @@ function SearchPage() {
 						<p style={{ textAlign: 'center', margin: 0 }}>Inga böcker hittades.</p>
 					)}
 				</div>
-				<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
+				<div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
 					{books.map((book) => (
 						<Link
 							key={book.id}
