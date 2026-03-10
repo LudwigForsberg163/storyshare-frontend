@@ -27,7 +27,6 @@ function SearchPage() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [query, setQuery] = useState("");
-	const [searched, setSearched] = useState(false);
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -40,7 +39,6 @@ function SearchPage() {
 		}
 		setLoading(true);
 		setError(null);
-		setSearched(true);
 		try {
 			const data = await searchBooks(query);
 			setBooks(data);
@@ -52,30 +50,23 @@ function SearchPage() {
 		}
 	}
 
-	// On mount, initialize query from URL and auto-search if present
+	// On mount/navigation, initialize query from URL and search (empty query returns all books)
 	useEffect(() => {
 		const q = searchParams.get("q") || "";
 		setQuery(q);
-		if (q) {
-			(async () => {
-				setLoading(true);
-				setError(null);
-				setSearched(true);
-				try {
-					const data = await searchBooks(q);
-					setBooks(data);
-				} catch (err: any) {
-					setError(err.message || "Nätverksfel. Försök igen.");
-					setBooks([]);
-				} finally {
-					setLoading(false);
-				}
-			})();
-		} else {
-			setBooks([]);
+		(async () => {
+			setLoading(true);
 			setError(null);
-			setSearched(false);
-		}
+			try {
+				const data = await searchBooks(q);
+				setBooks(data);
+			} catch (err: any) {
+				setError(err.message || "Nätverksfel. Försök igen.");
+				setBooks([]);
+			} finally {
+				setLoading(false);
+			}
+		})();
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams]);
 
@@ -138,7 +129,7 @@ function SearchPage() {
 						</button>
 					</form>
 					{error && <p style={{ color: "red", textAlign: 'center', margin: 0 }}>{error}</p>}
-					{!loading && searched && books.length === 0 && !error && (
+				{!loading && books.length === 0 && !error && (
 						<p style={{ textAlign: 'center', margin: 0 }}>Inga böcker hittades.</p>
 					)}
 				</div>
