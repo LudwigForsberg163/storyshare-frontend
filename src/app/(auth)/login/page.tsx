@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// TEMP: Print the API URL for debugging
+console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+
 // Bibliotekets färgpalett
 const colors = {
   background: "#F5EFE6",
