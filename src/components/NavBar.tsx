@@ -1,8 +1,7 @@
 
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import LogoutButton from "./LogoutButton";
+import { usePathname, useRouter } from "next/navigation";
 
 
 const colors = {
@@ -17,14 +16,22 @@ const colors = {
 };
 
 const navItems = [
-  { href: "/search", label: "Sök", icon: "🔍" },
-  { href: "/borrow", label: "Låna", icon: "📚" },
-  { href: "/loans", label: "Mina lån", icon: "📖" },
-  { href: "/return", label: "Lämna tillbaka", icon: "↩️" },
+  { href: "/", label: "Sök", icon: "🔍", exact: true },
+  { href: "/loans", label: "Mina lån", icon: "📖", exact: false },
 ];
 
 export default function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Don't show NavBar on auth pages
+  if (pathname.startsWith("/login") || pathname.startsWith("/register")) return null;
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    router.push("/login");
+  }
+
   return (
     <nav
       className="responsive-nav"
@@ -35,19 +42,19 @@ export default function NavBar() {
         boxShadow: '0 2px 12px rgba(107,79,43,0.07)',
       }}
     >
-      {navItems.map((item) => (
+      {navItems.map((item) => {
+        const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+        return (
         <Link
           key={item.href}
           href={item.href}
-          className={
-            "nav-link" + (pathname.startsWith(item.href) ? " active" : "")
-          }
+          className={"nav-link" + (isActive ? " active" : "")}
           style={{
-            color: pathname.startsWith(item.href) ? colors.accent : colors.heading,
+            color: isActive ? colors.accent : colors.heading,
             background: 'none',
             borderRadius: 8,
             padding: '4px 8px',
-            fontWeight: pathname.startsWith(item.href) ? 700 : 500,
+            fontWeight: 600,
             transition: 'color 0.2s, background 0.2s',
             display: 'flex',
             flexDirection: 'column',
@@ -59,65 +66,28 @@ export default function NavBar() {
           <span className="nav-icon" aria-hidden="true" style={{ fontSize: 22, marginBottom: 2 }}>{item.icon}</span>
           <span className="nav-label">{item.label}</span>
         </Link>
-      ))}
-      <div className="nav-link" style={{padding: 0}}>
-        <LogoutButton />
-      </div>
+        );
+      })}
+      <button
+        onClick={handleLogout}
+        className="nav-link"
+        style={{
+          background: 'none',
+          border: 'none',
+          color: colors.heading,
+          fontWeight: 600,
+          fontSize: 15,
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '4px 8px',
+          borderRadius: 8,
+        }}
+      >
+        <span className="nav-icon" aria-hidden="true" style={{ fontSize: 22, marginBottom: 2 }}>🚪</span>
+        <span className="nav-label">Logga ut</span>
+      </button>
     </nav>
   );
 }
-
-// CSS styles for responsive nav bar
-// Place this in your global CSS or import in your layout
-/*
-.responsive-nav {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: #fff;
-  border-top: 1.5px solid #6B4F2B;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  z-index: 100;
-}
-.nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #6B4F2B;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 4px 0;
-  transition: color 0.2s;
-}
-.nav-link.active {
-  color: #7BAE7F;
-}
-.nav-icon {
-  font-size: 22px;
-  margin-bottom: 2px;
-}
-@media (min-width: 700px) {
-  .responsive-nav {
-    position: static;
-    flex-direction: row;
-    height: 56px;
-    border-top: none;
-    border-bottom: 1.5px solid #6B4F2B;
-    background: #fff;
-  }
-  .nav-link {
-    flex-direction: row;
-    font-size: 16px;
-    padding: 0 18px;
-  }
-  .nav-icon {
-    margin-bottom: 0;
-    margin-right: 8px;
-  }
-}
-*/

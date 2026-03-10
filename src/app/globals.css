@@ -4,12 +4,6 @@ body {
   padding: 0;
   background: #F5EFE6;
 }
-nav {
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  padding: 1rem;
-}
-
 /* Responsive NavBar styles */
 .responsive-nav {
   display: flex;

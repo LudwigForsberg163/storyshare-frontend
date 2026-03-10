@@ -11,3 +11,4 @@ export default function ReturnPage() {
     </AuthGuard>
   );
 }
+// This page has been removed. Returning is handled on the loans page.

@@ -14,6 +14,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [router]);
 
-  if (!checked) return null;
+  if (!checked) return <div style={{ minHeight: '100vh' }} />;
   return <>{children}</>;
 }

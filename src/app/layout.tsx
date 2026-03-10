@@ -1,4 +1,5 @@
 import './globals.css';
+import NavBar from '../components/NavBar';
 
 export const metadata = {
   title: 'Book Loan App',
@@ -9,7 +10,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        {children}
+        <NavBar />
+        <div style={{ paddingBottom: 64 }}>
+          {children}
+        </div>
       </body>
     </html>
   );
