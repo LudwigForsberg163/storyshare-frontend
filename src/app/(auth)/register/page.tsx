@@ -52,7 +52,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: colors.background }}>
+    <main style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: colors.background }}>
       <form
         onSubmit={handleRegister}
         style={{
@@ -135,6 +135,8 @@ export default function RegisterPage() {
           </button>
         </div>
       </form>
+      {/* QR code below everything */}
+      <img src="/qr.svg" alt="QR code for app link" style={{ marginTop: 32, width: 300, height: 'auto', display: 'block' }} />
     </main>
   );
 }

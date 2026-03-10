@@ -2,10 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// TEMP: Print the API URL for debugging
-console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-
-// Bibliotekets färgpalett
+// Bibliotekets palette
 const colors = {
   background: "#F5EFE6",
   card: "#FFFFFF",
@@ -79,7 +76,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: colors.background }}>
+    <main style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: colors.background }}>
       <form
         style={{
           width: '100%',
@@ -187,6 +184,8 @@ export default function LoginPage() {
           </button>
         </div>
       </form>
+      {/* QR code below everything */}
+      <img src="/qr.svg" alt="QR code for app link" style={{ marginTop: 32, width: 300, height: 'auto', display: 'block' }} />
     </main>
   );
 }
